@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tradutor com API</title>
+</head>
+<body>
+  <header>
+    <h1>Tradutor (Inglês → Português)</h1>
+  </header>
+
+  <label for="texto">Digite o texto em inglês:</label><br>
+  <input type="text" id="texto" placeholder="Ex: Thank you for choosing me!" size="50">
+  <button onclick="traduzirTexto()">Traduzir</button>
+
+  <h2>Resultado:</h2>
+  <pre id="output">— aguardando —</pre>
+
+  <script>
+    async function traduzirTexto() {
+      const texto = document.getElementById('texto').value.trim();
+      const output = document.getElementById('output');
+
+      if (!texto) {
+        output.textContent = 'Por favor, digite um texto para traduzir.';
+        return;
+      }
+
+      const encodedText = encodeURIComponent(texto);
+      const url = `https://free-google-translator.p.rapidapi.com/external-api/free-google-translator?from=en&to=pt&query=${encodedText}`;
+      
+      const options = {
+        method: 'POST',
+        headers: {
+          'x-rapidapi-key': '738fd614ecmsh38d449d95c325a6p10fe80jsn2a420493680e',
+          'x-rapidapi-host': 'free-google-translator.p.rapidapi.com',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ translate: 'rapidapi' })
+      };
+
+      output.textContent = 'Traduzindo...';
+
+      try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result);
+	    output.textContent = result.translation;
+      } catch (error) {
+        console.error(error);
+        output.textContent = 'Erro ao traduzir: ' + error;
+      }
+    }
+  </script>
+</body>
+</html>
+
+

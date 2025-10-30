@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Horóscopo</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;max-width:720px;margin:40px auto;padding:0 16px}
+    header{display:flex;align-items:center;gap:12px}
+    label{font-weight:600}
+    select,button{font-size:1rem;padding:8px 10px}
+    pre{background:#111;color:#eee;padding:12px;border-radius:6px;white-space:pre-wrap}
+    .note{font-size:.9rem;color:#555}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Horóscopo API</h1>
+  </header>
+
+  <p class="note">Selecione um <strong>signo</strong> e clique em <strong>Verifique seu horóscopo</strong>. O resultado será mostrado abaixo.</p>
+
+  <form id="form">
+    <label for="sign">Signo do Zodiaco:</label>
+    <select id="sign" name="sign" required>
+      <option value="aries">Aries</option>
+      <option value="taurus">Touro</option>
+      <option value="gemini">Gêmeos</option>
+      <option value="cancer">Câncer</option>
+      <option value="leo">Leão</option>
+      <option value="virgo">Virgem</option>
+      <option value="libra">Libra</option>
+      <option value="scorpio">Escorpião</option>
+      <option value="sagittarius">Sagitário</option>
+      <option value="capricorn">Capricórnio</option>
+      <option value="aquarius">Aquário</option>
+      <option value="pisces">Peixe</option>
+    </select>
+
+    <button type="submit">Verifique seu horóscopo</button>
+  </form>
+
+  <h2>Response:</h2>
+  <pre id="output">— aguardando —</pre>
+
+  <script>
+    const form = document.getElementById('form');
+    const output = document.getElementById('output');
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const sign = document.getElementById('sign').value; // ex: aries
+
+      // monta a URL dinamicamente com o signo e o período
+      const url = `https://daily-horoscope-api.p.rapidapi.com/api/Daily-Horoscope-English/?zodiacSign=${encodeURIComponent(sign)}&timePeriod=weekly`;
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': '738fd614ecmsh38d449d95c325a6p10fe80jsn2a420493680e',
+          'x-rapidapi-host': 'daily-horoscope-api.p.rapidapi.com'
+        }
+      };
+
+      output.textContent = 'Carregando...';
+
+      try {
+        const response = await fetch(url, options);
+        try {
+			const response = await fetch(url, options);
+			const result = await response.text();
+			console.log(result);
+			output.textContent = result;
+		} catch (error) {
+			console.error(error);
+		}
+      } catch (error) {
+        console.error(error);
+        output.textContent = 'Erro: ' + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
